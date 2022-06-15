@@ -8,7 +8,7 @@
     "url": "https://github.com/BoastfulCat/fireorm-web/issues"
   },
   "homepage": "https://github.com/BoastfulCat/fireorm-web#readme",
-  "main": "index.js",
+  "types": "lib/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BoastfulCat/fireorm-web.git"
