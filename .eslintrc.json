@@ -1,0 +1,72 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "semi": "off",
+    "@typescript-eslint/semi": [
+      "error"
+    ],
+    "@typescript-eslint/dot-notation": "off",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        "accessibility": "explicit"
+      }
+    ],
+    "@typescript-eslint/no-inferrable-types": "off",
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "brace-style": [
+      "off",
+      "off"
+    ],
+    "import/order": "off",
+    "max-len": [
+      "error",
+      {
+        "ignorePattern": "^import |^export | implements | className",
+        "code": 180
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "object-shorthand": "off",
+    "quote-props": [
+      "error",
+      "consistent"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "indent": 0,
+    "require-jsdoc": 0,
+    "no-trailing-spaces": [
+      "error",
+      {
+        "skipBlankLines": true
+      }
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn"
+    ]
+  }
+}
