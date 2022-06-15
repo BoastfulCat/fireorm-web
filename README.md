@@ -93,13 +93,13 @@ todo.done = false;
 const todoDocument = await todoRepository.create(todo);
 
 // Read record
-const mySuperTodoDocument = await todoRepository.findById(todoDocument.id);
+const mySuperTodoDocument = await todoRepository.findById(todoDocument._id);
 
 // Update record
 await todoRepository.update(mySuperTodoDocument);
 
 // Delete record
-await todoRepository.delete(mySuperTodoDocument.id);
+await todoRepository.delete(mySuperTodoDocument._id);
 ```
 
 ## Development
