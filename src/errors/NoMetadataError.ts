@@ -1,4 +1,4 @@
-import {Entity, EntityConstructorOrPath} from '@orm/types';
+import {Entity, EntityConstructorOrPath} from '../types';
 
 export class NoMetadataError extends Error {
   public constructor(pathOrConstructor: EntityConstructorOrPath<Entity>) {

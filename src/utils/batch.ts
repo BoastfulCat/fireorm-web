@@ -1,5 +1,5 @@
-import {FirestoreBatchStorage} from '@orm/storages';
-import {getMetadataStore} from '@orm/utils';
+import {FirestoreBatchStorage} from '../storages';
+import {getMetadataStore} from '../utils';
 
 export const createBatch = (): FirestoreBatchStorage => {
   const metadataStorage = getMetadataStore();

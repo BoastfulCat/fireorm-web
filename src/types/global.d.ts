@@ -1,4 +1,4 @@
-import {MetadataStore} from '@orm/storages';
+import {MetadataStore} from '../storages';
 
 export {};
 

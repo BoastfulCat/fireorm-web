@@ -1,8 +1,8 @@
 import {Firestore} from '@firebase/firestore';
-import {BatchOperation, Constructor, Entity} from '@orm/types';
-import {serializeEntity} from '@orm/utils';
 import {validate, ValidationError, ValidatorOptions} from 'class-validator';
 import {writeBatch} from 'firebase/firestore';
+import {BatchOperation, Constructor, Entity} from '../types';
+import {serializeEntity} from '../utils';
 
 export class FirestoreBatchUnit {
   private status: 'pending' | 'committing' = 'pending';

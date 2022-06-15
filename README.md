@@ -43,7 +43,7 @@ and you have enabled the following settings in `tsconfig.json`:
 ```ts
 import {initializeApp} from 'firebase/app';
 import {getFirestore} from 'firebase/firestore';
-import {initialize} from 'fireorm-web/utils';
+import {initialize} from 'fireorm-web';
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -68,7 +68,7 @@ initialize(firebaseFirestore);
 1. Create your Firestore models
 
 ```typescript
-import { Collection } from 'fireorm-web/decorators';
+import { Collection } from 'fireorm-web';
 
 @Collection()
 class Todo {
@@ -81,7 +81,7 @@ class Todo {
 2. And your domain logic looks like this
 
 ```ts
-import { getRepository } from 'fireorm-web/utils';
+import { getRepository } from 'fireorm-web';
 
 const todoRepository = getRepository(Todo);
 

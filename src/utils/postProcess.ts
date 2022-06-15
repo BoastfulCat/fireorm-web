@@ -1,5 +1,5 @@
-import {filterKey, searchKey} from '@orm/decorators';
-import {Entity} from '@orm/types';
+import {filterKey, searchKey} from '../decorators';
+import {Entity} from '../types';
 
 export function searchInData<T extends Entity>(search: string | undefined, data: T): boolean {
   if (!search) {

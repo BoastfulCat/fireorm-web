@@ -1,7 +1,7 @@
 import {runTransaction as firestoreRunTransaction} from '@firebase/firestore';
-import {FirestoreTransactionStorage} from '@orm/storages';
-import {TransactionReferenceStorage} from '@orm/types';
-import {getMetadataStore, getRepository} from '@orm/utils';
+import {FirestoreTransactionStorage} from '../storages';
+import {TransactionReferenceStorage} from '../types';
+import {getMetadataStore, getRepository} from '../utils';
 
 export const runTransaction = async <T>(executor: (tran: FirestoreTransactionStorage) => Promise<T>): Promise<T> => {
   const metadataStorage = getMetadataStore();

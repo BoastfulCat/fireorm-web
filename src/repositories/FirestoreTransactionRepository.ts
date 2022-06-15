@@ -1,5 +1,6 @@
 import {SetOptions} from '@firebase/firestore';
-import {AbstractFirestoreRepository} from '@orm/repositories/AbstractFirestoreRepository';
+import {doc, FirestoreError, Transaction, Unsubscribe} from 'firebase/firestore';
+import {AbstractFirestoreRepository} from '../repositories/AbstractFirestoreRepository';
 import {
   Entity,
   EntityConstructorOrPath,
@@ -7,8 +8,7 @@ import {
   TransactionReferenceStorage,
   TransactionRepository,
   WithOptionalId,
-} from '@orm/types';
-import {doc, FirestoreError, Transaction, Unsubscribe} from 'firebase/firestore';
+} from '../types';
 
 export class FirestoreTransactionRepository<T extends Entity> extends AbstractFirestoreRepository<T> implements TransactionRepository<T> {
   public constructor(

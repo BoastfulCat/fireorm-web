@@ -1,8 +1,17 @@
 import {FieldValue, FirestoreError, SetOptions} from '@firebase/firestore';
-import {serializeKey} from '@orm/decorators';
-import {NoMetadataError} from '@orm/errors';
-import {QueryBuilderUnit} from '@orm/units';
-import {DummyRepository} from '@orm/repositories/DummyRepository';
+import {plainToInstance} from 'class-transformer';
+import {validate, ValidationError} from 'class-validator';
+import {
+  collection,
+  CollectionReference,
+  DocumentSnapshot,
+  QuerySnapshot,
+  Transaction,
+  Unsubscribe,
+} from 'firebase/firestore';
+import {serializeKey} from '../decorators';
+import {NoMetadataError} from '../errors';
+import {DummyRepository} from '../repositories/DummyRepository';
 import {
   CustomQuery,
   Entity,
@@ -17,7 +26,8 @@ import {
   Repository,
   TransactionReferenceStorage,
   WherePropParam,
-} from '@orm/types';
+} from '../types';
+import {QueryBuilderUnit} from '../units';
 import {
   getMetadataStore,
   getRepository,
@@ -27,17 +37,7 @@ import {
   isObject,
   isTimestamp,
   serializeEntity,
-} from '@orm/utils';
-import {plainToInstance} from 'class-transformer';
-import {validate, ValidationError} from 'class-validator';
-import {
-  collection,
-  CollectionReference,
-  DocumentSnapshot,
-  QuerySnapshot,
-  Transaction,
-  Unsubscribe,
-} from 'firebase/firestore';
+} from '../utils';
 
 export abstract class AbstractFirestoreRepository<T extends Entity> extends DummyRepository implements Repository<T> {
   protected readonly colMetadata: FullCollectionMetadata;

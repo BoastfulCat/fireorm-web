@@ -1,7 +1,7 @@
 import {Firestore} from '@firebase/firestore';
-import {FirestoreBatchUnit} from '@orm/units';
-import {FirestoreBatchRepository, FirestoreBatchSingleRepository} from '@orm/repositories';
-import {Entity, EntityConstructorOrPath, FirestoreBatch} from '@orm/types';
+import {FirestoreBatchUnit} from '../units';
+import {FirestoreBatchRepository, FirestoreBatchSingleRepository} from '../repositories';
+import {Entity, EntityConstructorOrPath, FirestoreBatch} from '../types';
 
 export class FirestoreBatchStorage implements FirestoreBatch {
   private readonly batch: FirestoreBatchUnit;

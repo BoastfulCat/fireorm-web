@@ -1,4 +1,4 @@
-import {Constructor} from '@orm/types';
+import {Constructor} from '../types';
 
 export const serializeKey = Symbol('Serialize');
 

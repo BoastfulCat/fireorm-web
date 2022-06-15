@@ -1,4 +1,5 @@
 import {FirestoreError} from '@firebase/firestore';
+import {Unsubscribe} from 'firebase/firestore';
 import {
   CustomQuery,
   Entity,
@@ -10,8 +11,7 @@ import {
   QueryBuilder,
   QueryExecutor,
   WherePropParam,
-} from '@orm/types';
-import {Unsubscribe} from 'firebase/firestore';
+} from '../types';
 import {getPath} from 'ts-object-path';
 
 export class QueryBuilderUnit<T extends Entity> implements QueryBuilder<T> {

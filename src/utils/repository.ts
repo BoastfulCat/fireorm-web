@@ -1,7 +1,7 @@
-import {FirestoreRepository, FirestoreTransactionRepository} from '@orm/repositories';
-import {FirestoreTransactionStorage} from '@orm/storages';
-import {Entity, EntityConstructorOrPath, RepositoryType, TransactionReferenceStorage} from '@orm/types';
-import {getMetadataStore} from '@orm/utils';
+import {FirestoreRepository, FirestoreTransactionRepository} from '../repositories';
+import {FirestoreTransactionStorage} from '../storages';
+import {Entity, EntityConstructorOrPath, RepositoryType, TransactionReferenceStorage} from '../types';
+import {getMetadataStore} from '../utils';
 import {Transaction} from 'firebase/firestore';
 
 function _getRepository<T extends Entity = Entity>(

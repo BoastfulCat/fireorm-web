@@ -1,4 +1,4 @@
-import {escapeRegExp} from '@orm/utils';
+import {escapeRegExp} from '../utils';
 
 export const searchKey = Symbol('Search');
 

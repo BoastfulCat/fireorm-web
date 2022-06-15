@@ -1,5 +1,5 @@
-import {FirestoreBatchUnit} from '@orm/units';
-import {NoMetadataError} from '@orm/errors';
+import {collection, CollectionReference, doc} from 'firebase/firestore';
+import {NoMetadataError} from '../errors';
 import {
   BatchRepository,
   Entity,
@@ -7,9 +7,9 @@ import {
   FullCollectionMetadata,
   MetadataStorageConfig,
   WithOptionalId,
-} from '@orm/types';
-import {getMetadataStore} from '@orm/utils';
-import {collection, CollectionReference, doc} from 'firebase/firestore';
+} from '../types';
+import {FirestoreBatchUnit} from '../units';
+import {getMetadataStore} from '../utils';
 
 export class FirestoreBatchRepository<T extends Entity> implements BatchRepository<T> {
   protected colMetadata: FullCollectionMetadata;

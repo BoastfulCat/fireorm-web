@@ -1,7 +1,7 @@
 import {FieldValue} from '@firebase/firestore';
-import {ignoreKey, serializeKey} from '@orm/decorators';
-import {Entity, SubCollectionMetadata} from '@orm/types';
-import {getMetadataStore} from '@orm/utils';
+import {ignoreKey, serializeKey} from '../decorators';
+import {Entity, SubCollectionMetadata} from '../types';
+import {getMetadataStore} from '../utils';
 import {instanceToPlain} from 'class-transformer';
 
 /**

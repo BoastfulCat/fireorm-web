@@ -1,5 +1,5 @@
-import {FirestoreBatchRepository} from '@orm/repositories/FirestoreBatchRepository';
-import {BaseFirestoreBatchSingleRepository, Entity} from '@orm/types';
+import {FirestoreBatchRepository} from '../repositories/FirestoreBatchRepository';
+import {BaseFirestoreBatchSingleRepository, Entity} from '../types';
 
 /**
  *

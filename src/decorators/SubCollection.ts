@@ -1,5 +1,5 @@
-import {Entity, EntityConstructor} from '@orm/types';
-import {getMetadataStore} from '@orm/utils';
+import {Entity, EntityConstructor} from '../types';
+import {getMetadataStore} from '../utils';
 import {plural} from 'pluralize';
 
 export function SubCollection(entityConstructor: EntityConstructor, entityName?: string) {

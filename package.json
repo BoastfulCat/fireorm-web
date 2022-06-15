@@ -1,6 +1,6 @@
 {
   "name": "fireorm-web",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "description": "ORM for Web Firestore",
   "author": "BoastfulCat",
   "license": "ISC",
@@ -8,7 +8,7 @@
     "url": "https://github.com/BoastfulCat/fireorm-web/issues"
   },
   "homepage": "https://github.com/BoastfulCat/fireorm-web#readme",
-  "types": "lib/types/index.d.ts",
+  "types": "lib/index.d.ts",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "orm"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc -p src",
     "watch": "tsc -w --incremental",
     "lint": "eslint src/**/*.ts",
     "release": "semantic-release",

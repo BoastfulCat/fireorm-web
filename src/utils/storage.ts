@@ -1,6 +1,6 @@
 import {Firestore} from '@firebase/firestore';
-import {MetadataStore} from '@orm/storages';
-import {MetadataStorageConfig} from '@orm/types';
+import {MetadataStore} from '../storages';
+import {MetadataStorageConfig} from '../types';
 
 export const initialize = (
   firestore: Firestore,

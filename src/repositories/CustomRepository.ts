@@ -1,6 +1,6 @@
-import {DummyRepository} from '@orm/repositories/DummyRepository';
-import {Constructor, Entity, Repository} from '@orm/types';
-import {getMetadataStore} from '@orm/utils';
+import {DummyRepository} from '../repositories/DummyRepository';
+import {Constructor, Entity, Repository} from '../types';
+import {getMetadataStore} from '../utils';
 
 /*
   Cannot enforce the type in target presumably becasuse Typescript
@@ -8,7 +8,8 @@ import {getMetadataStore} from '@orm/utils';
   the repository. Might be interesting to revisit later
 */
 export function CustomRepository<T extends Entity>(entity: Constructor<T>) {
-  return function(target: DummyRepository): void {
+  /* eslint-disable-next-line space-before-function-paren */
+  return function (target: DummyRepository): void {
     getMetadataStore().setRepository({
       entity,
       target: target as Constructor<Repository<Entity>>,

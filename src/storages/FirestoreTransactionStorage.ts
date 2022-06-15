@@ -1,11 +1,11 @@
-import {FirestoreTransactionRepository} from '@orm/repositories';
+import {FirestoreTransactionRepository} from '../repositories';
 import {
   Entity,
   EntityConstructorOrPath,
   FirestoreTransaction,
   TransactionReferenceStorage,
-} from '@orm/types';
-import {getMetadataStore} from '@orm/utils';
+} from '../types';
+import {getMetadataStore} from '../utils';
 import {Transaction} from 'firebase/firestore';
 
 export class FirestoreTransactionStorage implements FirestoreTransaction {

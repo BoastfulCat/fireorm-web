@@ -1,5 +1,6 @@
 import {Firestore} from '@firebase/firestore';
-import {DummyRepository} from '@orm/repositories';
+import {isEqual} from 'lodash';
+import {DummyRepository} from '../repositories';
 import {
   CollectionMetadata,
   CollectionMetadataWithSegments,
@@ -9,8 +10,7 @@ import {
   MetadataStorageConfig,
   RepositoryMetadata,
   SubCollectionMetadataWithSegments,
-} from '@orm/types';
-import {isEqual} from 'lodash';
+} from '../types';
 
 export class MetadataStore {
   public readonly collections: CollectionMetadataWithSegments[] = [];

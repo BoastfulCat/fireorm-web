@@ -1,9 +1,9 @@
 import {FirestoreError, QueryConstraint, SetOptions} from '@firebase/firestore';
-import {FirestoreBatchStorage} from '@orm/storages';
-import {AbstractFirestoreRepository} from '@orm/repositories/AbstractFirestoreRepository';
-import {FirestoreBatchSingleRepository} from '@orm/repositories/FirestoreBatchSingleRepository';
-import {Entity, PartialBy, PipeOperator, QueryExecutorConfig, Repository, TransactionRepository} from '@orm/types';
-import {getMetadataStore, runTransaction} from '@orm/utils';
+import {FirestoreBatchStorage} from '../storages';
+import {AbstractFirestoreRepository} from '../repositories/AbstractFirestoreRepository';
+import {FirestoreBatchSingleRepository} from '../repositories/FirestoreBatchSingleRepository';
+import {Entity, PartialBy, PipeOperator, QueryExecutorConfig, Repository, TransactionRepository} from '../types';
+import {getMetadataStore, runTransaction} from '../utils';
 import {
   deleteDoc,
   doc,
