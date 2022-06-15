@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 export const filterKey = Symbol('Filter');
 
 const someFilter = (filter: { field: string, value: string }[], key: string, value: string): boolean => {

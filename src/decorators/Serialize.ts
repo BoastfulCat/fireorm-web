@@ -1,5 +1,4 @@
 import {Constructor} from '@orm/types';
-import 'reflect-metadata';
 
 export const serializeKey = Symbol('Serialize');
 

@@ -1,9 +1,9 @@
 import {Firestore} from '@firebase/firestore';
-import {FirestoreBatchUnit} from '@orm/batches';
-import {BaseFirestoreBatchRepository, BaseFirestoreBatchSingleRepository} from '@orm/repositories';
-import {Entity, EntityConstructorOrPath, FirestoreBatch as FirestoreBatchInterface} from '@orm/types';
+import {FirestoreBatchUnit} from '@orm/units';
+import {FirestoreBatchRepository, FirestoreBatchSingleRepository} from '@orm/repositories';
+import {Entity, EntityConstructorOrPath, FirestoreBatch} from '@orm/types';
 
-export class FirestoreBatch implements FirestoreBatchInterface {
+export class FirestoreBatchStorage implements FirestoreBatch {
   private readonly batch: FirestoreBatchUnit;
 
   public constructor(
@@ -17,11 +17,11 @@ export class FirestoreBatch implements FirestoreBatchInterface {
    *
    * @template T
    * @param {EntityConstructorOrPath<T>} pathOrConstructor path or constructor
-   * @return  {BaseFirestoreBatchRepository<T>}
+   * @return  {FirestoreBatchRepository<T>}
    * @memberof FirestoreBatch
    */
-  public getRepository<T extends Entity>(pathOrConstructor: EntityConstructorOrPath<T>): BaseFirestoreBatchRepository<T> {
-    return new BaseFirestoreBatchRepository(pathOrConstructor, this.batch);
+  public getRepository<T extends Entity>(pathOrConstructor: EntityConstructorOrPath<T>): FirestoreBatchRepository<T> {
+    return new FirestoreBatchRepository(pathOrConstructor, this.batch);
   }
 
   /**
@@ -30,11 +30,11 @@ export class FirestoreBatch implements FirestoreBatchInterface {
    *
    * @template T
    * @param {EntityConstructorOrPath<T>} pathOrConstructor path or constructor
-   * @return {BaseFirestoreBatchSingleRepository<T>}
+   * @return {FirestoreBatchSingleRepository<T>}
    * @memberof FirestoreBatch
    */
-  public getSingleRepository<T extends Entity>(pathOrConstructor: EntityConstructorOrPath<T>): BaseFirestoreBatchSingleRepository<T> {
-    return new BaseFirestoreBatchSingleRepository(pathOrConstructor, this.batch);
+  public getSingleRepository<T extends Entity>(pathOrConstructor: EntityConstructorOrPath<T>): FirestoreBatchSingleRepository<T> {
+    return new FirestoreBatchSingleRepository(pathOrConstructor, this.batch);
   }
 
   /**

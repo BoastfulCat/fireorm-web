@@ -1,25 +1,25 @@
-import {BaseTransactionRepository} from '@orm/repositories';
+import {FirestoreTransactionRepository} from '@orm/repositories';
 import {
   Entity,
   EntityConstructorOrPath,
-  FirestoreTransaction as FirestoreTransactionInterface,
+  FirestoreTransaction,
   TransactionReferenceStorage,
 } from '@orm/types';
 import {getMetadataStore} from '@orm/utils';
 import {Transaction} from 'firebase/firestore';
 
-export class FirestoreTransaction implements FirestoreTransactionInterface {
+export class FirestoreTransactionStorage implements FirestoreTransaction {
   public constructor(
     private transaction: Transaction,
     private tranRefStorage: TransactionReferenceStorage,
   ) {
   }
 
-  public getRepository<T extends Entity = Entity>(entityOrConstructor: EntityConstructorOrPath<T>): BaseTransactionRepository<T> {
+  public getRepository<T extends Entity = Entity>(entityOrConstructor: EntityConstructorOrPath<T>): FirestoreTransactionRepository<T> {
     if (!getMetadataStore().firestoreRef) {
       throw new Error('Firestore must be initialized first');
     }
 
-    return new BaseTransactionRepository<T>(entityOrConstructor, this.transaction, this.tranRefStorage);
+    return new FirestoreTransactionRepository<T>(entityOrConstructor, this.transaction, this.tranRefStorage);
   }
 }

@@ -1,9 +1,9 @@
 import {runTransaction as firestoreRunTransaction} from '@firebase/firestore';
-import {FirestoreTransaction} from '@orm/trunsactions';
+import {FirestoreTransactionStorage} from '@orm/storages';
 import {TransactionReferenceStorage} from '@orm/types';
 import {getMetadataStore, getRepository} from '@orm/utils';
 
-export const runTransaction = async <T>(executor: (tran: FirestoreTransaction) => Promise<T>): Promise<T> => {
+export const runTransaction = async <T>(executor: (tran: FirestoreTransactionStorage) => Promise<T>): Promise<T> => {
   const metadataStorage = getMetadataStore();
 
   if (!metadataStorage.firestoreRef) {
@@ -12,7 +12,7 @@ export const runTransaction = async <T>(executor: (tran: FirestoreTransaction) =
 
   return firestoreRunTransaction(metadataStorage.firestoreRef, async (transaction) => {
     const tranRefStorage: TransactionReferenceStorage = new Set();
-    const result = await executor(new FirestoreTransaction(transaction, tranRefStorage));
+    const result = await executor(new FirestoreTransactionStorage(transaction, tranRefStorage));
 
     tranRefStorage.forEach(({entity, path, propertyKey}) => {
       const record = entity as unknown as Record<string, unknown>;

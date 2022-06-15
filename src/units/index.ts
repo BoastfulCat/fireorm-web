@@ -1,2 +1,2 @@
+export * from './QueryBuilderUnit';
 export * from './FirestoreBatchUnit';
-export * from './FirestoreBatch';

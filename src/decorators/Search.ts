@@ -1,5 +1,4 @@
 import {escapeRegExp} from '@orm/utils';
-import 'reflect-metadata';
 
 export const searchKey = Symbol('Search');
 

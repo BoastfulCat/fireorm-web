@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 export const ignoreKey = Symbol('Ignore');
 
 export function Ignore(): {

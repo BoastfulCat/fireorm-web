@@ -1,12 +1,12 @@
-import {FirestoreBatch} from '@orm/batches';
+import {FirestoreBatchStorage} from '@orm/storages';
 import {getMetadataStore} from '@orm/utils';
 
-export const createBatch = (): FirestoreBatch => {
+export const createBatch = (): FirestoreBatchStorage => {
   const metadataStorage = getMetadataStore();
 
   if (!metadataStorage.firestoreRef) {
     throw new Error('Firestore must be initialized first');
   }
 
-  return new FirestoreBatch(metadataStorage.firestoreRef);
+  return new FirestoreBatchStorage(metadataStorage.firestoreRef);
 };

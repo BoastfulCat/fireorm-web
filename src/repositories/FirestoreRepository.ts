@@ -1,7 +1,7 @@
 import {FirestoreError, QueryConstraint, SetOptions} from '@firebase/firestore';
-import {FirestoreBatch} from '@orm/batches';
+import {FirestoreBatchStorage} from '@orm/storages';
 import {AbstractFirestoreRepository} from '@orm/repositories/AbstractFirestoreRepository';
-import {BaseFirestoreBatchSingleRepository} from '@orm/repositories/BaseFirestoreBatchSingleRepository';
+import {FirestoreBatchSingleRepository} from '@orm/repositories/FirestoreBatchSingleRepository';
 import {Entity, PartialBy, PipeOperator, QueryExecutorConfig, Repository, TransactionRepository} from '@orm/types';
 import {getMetadataStore, runTransaction} from '@orm/utils';
 import {
@@ -22,7 +22,7 @@ import {
   WhereFilterOp,
 } from 'firebase/firestore';
 
-export class BaseFirestoreRepository<T extends Entity> extends AbstractFirestoreRepository<T> implements Repository<T> {
+export class FirestoreRepository<T extends Entity> extends AbstractFirestoreRepository<T> implements Repository<T> {
   public findById(id: string): Promise<T | null> {
     return getDoc(doc(this.firestoreColRef, id))
       .then((docRef) => docRef.exists() ? this.extractTFromDocSnap(docRef) : null);
@@ -101,9 +101,9 @@ export class BaseFirestoreRepository<T extends Entity> extends AbstractFirestore
     });
   }
 
-  public createBatch(): BaseFirestoreBatchSingleRepository<T> {
+  public createBatch(): FirestoreBatchSingleRepository<T> {
     const {firestoreRef} = getMetadataStore();
-    return new FirestoreBatch(firestoreRef).getSingleRepository(this.path);
+    return new FirestoreBatchStorage(firestoreRef).getSingleRepository(this.path);
   }
 
   public execute(config: QueryExecutorConfig<T>): Promise<T[]> | Unsubscribe {

@@ -10,7 +10,7 @@ import {
 } from '@orm/types';
 import {doc, FirestoreError, Transaction, Unsubscribe} from 'firebase/firestore';
 
-export class BaseTransactionRepository<T extends Entity> extends AbstractFirestoreRepository<T> implements TransactionRepository<T> {
+export class FirestoreTransactionRepository<T extends Entity> extends AbstractFirestoreRepository<T> implements TransactionRepository<T> {
   public constructor(
     public pathOrConstructor: EntityConstructorOrPath<T>,
     private readonly transaction: Transaction,

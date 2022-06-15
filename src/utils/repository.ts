@@ -1,5 +1,5 @@
-import {BaseFirestoreRepository, BaseTransactionRepository} from '@orm/repositories';
-import {FirestoreTransaction} from '@orm/trunsactions';
+import {FirestoreRepository, FirestoreTransactionRepository} from '@orm/repositories';
+import {FirestoreTransactionStorage} from '@orm/storages';
 import {Entity, EntityConstructorOrPath, RepositoryType, TransactionReferenceStorage} from '@orm/types';
 import {getMetadataStore} from '@orm/utils';
 import {Transaction} from 'firebase/firestore';
@@ -7,7 +7,7 @@ import {Transaction} from 'firebase/firestore';
 function _getRepository<T extends Entity = Entity>(
   entityConstructorOrPath: EntityConstructorOrPath<T>,
   repositoryType: RepositoryType,
-): BaseFirestoreRepository<T> {
+): FirestoreRepository<T> {
   const metadataStorage = getMetadataStore();
 
   if (!metadataStorage.firestoreRef) {
@@ -42,25 +42,25 @@ function _getRepository<T extends Entity = Entity>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new (repository?.target as any)(entityConstructorOrPath);
   } else {
-    return new BaseFirestoreRepository<T>(entityConstructorOrPath);
+    return new FirestoreRepository<T>(entityConstructorOrPath);
   }
 }
 
 export function getRepository<T extends Entity>(
   entityConstructorOrPath: EntityConstructorOrPath<T>,
-): BaseFirestoreRepository<T> {
+): FirestoreRepository<T> {
   return _getRepository(entityConstructorOrPath, 'default');
 }
 
 export function getCustomRepository<T extends Entity>(
   entityOrPath: EntityConstructorOrPath<T>,
-): BaseFirestoreRepository<T> {
+): FirestoreRepository<T> {
   return _getRepository(entityOrPath, 'custom');
 }
 
 export function getBaseRepository<T extends Entity>(
   entityOrPath: EntityConstructorOrPath<T>,
-): BaseFirestoreRepository<T> {
+): FirestoreRepository<T> {
   return _getRepository(entityOrPath, 'base');
 }
 
@@ -68,7 +68,7 @@ export function getTransactionRepository<T extends Entity>(
   pathWithSubCol: string,
   tran: Transaction,
   tranRefStorage: TransactionReferenceStorage,
-): BaseTransactionRepository<T> {
-  const firestoreTransaction = new FirestoreTransaction(tran, tranRefStorage);
+): FirestoreTransactionRepository<T> {
+  const firestoreTransaction = new FirestoreTransactionStorage(tran, tranRefStorage);
   return firestoreTransaction.getRepository(pathWithSubCol);
 }

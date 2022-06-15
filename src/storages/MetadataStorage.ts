@@ -1,5 +1,5 @@
 import {Firestore} from '@firebase/firestore';
-import {BaseRepository} from '@orm/repositories';
+import {DummyRepository} from '@orm/repositories';
 import {
   CollectionMetadata,
   CollectionMetadataWithSegments,
@@ -106,7 +106,7 @@ export class MetadataStore {
       throw new Error('Cannot register a custom repository twice with two different targets');
     }
 
-    if (!(repo.target.prototype instanceof BaseRepository)) {
+    if (!(repo.target.prototype instanceof DummyRepository)) {
       throw new Error(
         'Cannot register a custom repository on a class that does not inherit from BaseFirestoreRepository',
       );

@@ -4,7 +4,7 @@
  * Typescript is not capable to check instances of generics.
  *
  * @export
- * @class BaseRepository
+ * @class DummyRepository
  */
-export class BaseRepository {
+export class DummyRepository {
 }

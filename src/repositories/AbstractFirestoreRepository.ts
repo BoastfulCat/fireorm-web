@@ -1,8 +1,8 @@
 import {FieldValue, FirestoreError, SetOptions} from '@firebase/firestore';
 import {serializeKey} from '@orm/decorators';
 import {NoMetadataError} from '@orm/errors';
-import {QueryBuilder} from '@orm/queries';
-import {BaseRepository} from '@orm/repositories/BaseRepository';
+import {QueryBuilderUnit} from '@orm/units';
+import {DummyRepository} from '@orm/repositories/DummyRepository';
 import {
   CustomQuery,
   Entity,
@@ -39,7 +39,7 @@ import {
   Unsubscribe,
 } from 'firebase/firestore';
 
-export abstract class AbstractFirestoreRepository<T extends Entity> extends BaseRepository implements Repository<T> {
+export abstract class AbstractFirestoreRepository<T extends Entity> extends DummyRepository implements Repository<T> {
   protected readonly colMetadata: FullCollectionMetadata;
   protected readonly path: string;
   protected readonly config: MetadataStorageConfig;
@@ -194,12 +194,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<Entity>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<Entity>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereEqualTo(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereEqualTo(prop, val);
+    return new QueryBuilderUnit<T>(this).whereEqualTo(prop, val);
   }
 
   /**
@@ -210,12 +210,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereNotEqualTo(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereNotEqualTo(prop, val);
+    return new QueryBuilderUnit<T>(this).whereNotEqualTo(prop, val);
   }
 
   /**
@@ -226,12 +226,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereGreaterThan(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereGreaterThan(prop, val);
+    return new QueryBuilderUnit<T>(this).whereGreaterThan(prop, val);
   }
 
   /**
@@ -242,12 +242,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereGreaterOrEqualThan(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereGreaterOrEqualThan(prop, val);
+    return new QueryBuilderUnit<T>(this).whereGreaterOrEqualThan(prop, val);
   }
 
   /**
@@ -258,12 +258,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereLessThan(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereLessThan(prop, val);
+    return new QueryBuilderUnit<T>(this).whereLessThan(prop, val);
   }
 
   /**
@@ -274,12 +274,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereLessOrEqualThan(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereLessOrEqualThan(prop, val);
+    return new QueryBuilderUnit<T>(this).whereLessOrEqualThan(prop, val);
   }
 
   /**
@@ -290,12 +290,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal} val value to compare in the filter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereArrayContains(prop: WherePropParam<T>, val: FirestoreVal): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereArrayContains(prop, val);
+    return new QueryBuilderUnit<T>(this).whereArrayContains(prop, val);
   }
 
   /**
@@ -306,12 +306,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal[]} val array of values to compare in the filter (max 10 items in array)
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereArrayContainsAny(prop: WherePropParam<T>, val: FirestoreVal[]): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereArrayContainsAny(prop, val);
+    return new QueryBuilderUnit<T>(this).whereArrayContainsAny(prop, val);
   }
 
   /**
@@ -322,12 +322,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal[]} val array of values to compare in the filter (max 10 items in array)
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereIn(prop: WherePropParam<T>, val: FirestoreVal[]): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereIn(prop, val);
+    return new QueryBuilderUnit<T>(this).whereIn(prop, val);
   }
 
   /**
@@ -338,12 +338,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @param {WherePropParam<T>} prop field to be filtered on, where
    * prop could be keyof T or a lambda where T is the first parameter
    * @param {FirestoreVal[]} val array of values to compare in the filter (max 10 items in array)
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * query applied.
    * @memberof AbstractFirestoreRepository
    */
   public whereNotIn(prop: WherePropParam<T>, val: FirestoreVal[]): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).whereNotIn(prop, val);
+    return new QueryBuilderUnit<T>(this).whereNotIn(prop, val);
   }
 
   /**
@@ -362,11 +362,11 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
       throw new Error(`limitVal must be greater than 0. It received: ${limitVal}`);
     }
 
-    return new QueryBuilder<T>(this).limit(limitVal);
+    return new QueryBuilderUnit<T>(this).limit(limitVal);
   }
 
   public offset(value: number): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).offset(value);
+    return new QueryBuilderUnit<T>(this).offset(value);
   }
 
   /**
@@ -376,12 +376,12 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @template T
    * @param {WherePropParam<T>} prop field to be ordered on, where
    * prop could be keyof T or a lambda where T is the first parameter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * ordering applied.
    * @memberof AbstractFirestoreRepository
    */
   public orderByAscending(prop: WherePropParam<T>): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).orderByAscending(prop);
+    return new QueryBuilderUnit<T>(this).orderByAscending(prop);
   }
 
   /**
@@ -391,16 +391,16 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @template T
    * @param {WherePropParam<T>} prop field to be ordered on, where
    * prop could be keyof T or a lambda where T is the first parameter
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * ordering applied.
    * @memberof AbstractFirestoreRepository
    */
   public orderByDescending(prop: WherePropParam<T>): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).orderByDescending(prop);
+    return new QueryBuilderUnit<T>(this).orderByDescending(prop);
   }
 
   public pipe(...prop: PipeOperator<T>[]): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).pipe(...prop);
+    return new QueryBuilderUnit<T>(this).pipe(...prop);
   }
 
   /**
@@ -412,14 +412,14 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @memberof AbstractFirestoreRepository
    */
   public find(): Promise<T[]> {
-    return new QueryBuilder<T>(this).find();
+    return new QueryBuilderUnit<T>(this).find();
   }
 
   public findAndListen(
     next?: (items: T[]) => void,
     error?: (error: FirestoreError) => void,
   ): Unsubscribe {
-    return new QueryBuilder<T>(this).findAndListen(next, error);
+    return new QueryBuilderUnit<T>(this).findAndListen(next, error);
   }
 
   /**
@@ -433,14 +433,14 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    * @memberof AbstractFirestoreRepository
    */
   public findOne(): Promise<T | null> {
-    return new QueryBuilder<T>(this).findOne();
+    return new QueryBuilderUnit<T>(this).findOne();
   }
 
   public findOneAndListen(
     next?: (items: T[]) => void,
     error?: (error: FirestoreError) => void,
   ): Unsubscribe {
-    return new QueryBuilder<T>(this).findOneAndListen(next, error);
+    return new QueryBuilderUnit<T>(this).findOneAndListen(next, error);
   }
 
   /**
@@ -449,16 +449,16 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Base
    *
    * @template T
    * @param {CustomQuery<T>} func function to run in a new query
-   * @return {QueryBuilder<T>} A new QueryBuilder with the specified
+   * @return {QueryBuilderUnit<T>} A new QueryBuilder with the specified
    * custom query applied.
    * @memberof AbstractFirestoreRepository
    */
   public customQuery(func: CustomQuery<T>): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).customQuery(func);
+    return new QueryBuilderUnit<T>(this).customQuery(func);
   }
 
   public query(): QueryBuilderInterface<T> {
-    return new QueryBuilder<T>(this).query();
+    return new QueryBuilderUnit<T>(this).query();
   }
 
   /**

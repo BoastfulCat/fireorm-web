@@ -7,14 +7,14 @@ import {
   FirestoreVal,
   OrderByParams,
   PipeOperator,
-  QueryBuilder as QueryBuilderInterface,
+  QueryBuilder,
   QueryExecutor,
   WherePropParam,
 } from '@orm/types';
 import {Unsubscribe} from 'firebase/firestore';
 import {getPath} from 'ts-object-path';
 
-export class QueryBuilder<T extends Entity> implements QueryBuilderInterface<T> {
+export class QueryBuilderUnit<T extends Entity> implements QueryBuilder<T> {
   protected queries: Array<FireOrmQueryLine> = [];
   protected limitValue!: number;
   protected offsetValue!: number;
