@@ -84,7 +84,7 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Dumm
         obj[key] = {latitude, longitude};
       } else if (isDocumentReference(val)) {
         const {id, path} = val;
-        obj[key] = {id, path};
+        obj[key] = {_id: id, path};
       } else if (isObject(val)) {
         this.transformFirestoreTypes(val);
       }

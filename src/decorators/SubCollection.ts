@@ -6,7 +6,7 @@ export function SubCollection(entityConstructor: EntityConstructor, entityName?:
   return function(parentEntity: Entity, propertyKey: string): void {
     getMetadataStore().setCollection({
       entityConstructor,
-      name: entityName || plural(entityConstructor.name),
+      name: entityName || plural(entityConstructor.name.toLowerCase()),
       parentEntityConstructor: parentEntity.constructor as EntityConstructor,
       propertyKey,
     });
