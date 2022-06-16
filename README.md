@@ -102,6 +102,65 @@ await todoRepository.update(mySuperTodoDocument);
 await todoRepository.delete(mySuperTodoDocument._id);
 ```
 
+## Firebase Complex Data Types
+
+Firestore has support for [complex data types](https://firebase.google.com/docs/firestore/manage-data/data-types) such as GeoPoint and Reference. Full handling of complex data types is [being handled in this issue in fireorm](https://github.com/wovalle/fireorm/issues/58). Temporarily, fireorm and fireorm-web will export [Class Transformer's @Type](https://github.com/typestack/class-transformer#working-with-nested-objects) decorator. It receives a lamda where you return the type you want to cast to.
+
+## Core Concepts
+
+FireORM-Web is just a library to simplify the way we communicate with web firestore. It does not implement the underlying communication with the database (it resorts to official sdk's for that, such as [firebase](https://www.npmjs.com/package/firebase)).
+
+## Firestore
+
+According to [it's homepage](https://cloud.google.com/firestore), Firestore is a fast, fully managed, serverless, cloud-native NoSQL document database that simplifies storing, syncing, and querying data for your mobile, web, and IoT apps at global scale.
+
+In Firestore, data is stored in _Documents_ which are organized into _Collections_ that may also contain _SubCollections_.
+
+To take full advantage of what fireorm's have to offer, is recommended that you are familiarized with [Firestore Data Model](https://firebase.google.com/docs/firestore/data-model).
+
+## FireORM-Web Models
+
+Models in fireorm-web are just a way to specify the shape that our data (or _Documents_) will have. Models are represented with [JavaScript Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)!
+
+For example, let's pretend that we want to store information about Rock Bands:the band name, formation year and array of genres. Our Model would look like this:
+
+```ts
+class Band {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: string[];
+}
+```
+
+Wait, I only mentioned name, formationYear and genres in my original specification, so why does the model have a string property called `_id`? Because of the way the data is stored in Firestore, **it's required that every model contain a string property called _id**. If you create a model without the _id property (or with another data type such as Number or Symbol) fireorm-web won't work correctly.
+
+### FireORM-Web Collections
+
+Great, we have a model, but how can we ‘take’ our model and ‘store’ it the database? In Firestore we store data in _[Documents](https://firebase.google.com/docs/firestore/data-model#documents)_ and they are organized into _[Collections](https://firebase.google.com/docs/firestore/data-model#collections)_. To represent a Collection in our code, we'll use a fairly new JavaScript feature which Typescript lets us use super easy: [Decorators](https://www.typescriptlang.org/docs/handbook/decorators.html).
+
+To declare Collections we can just _decorate_ our model class with fireorm-web `Collection` decorator and each instance of the model would act as a Firestore Document.
+
+```typescript
+import { Collection } from 'fireorm-web';
+
+@Collection()
+class Band {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: string[];
+}
+```
+
+See how we're importing the `Collection` decorator from fireorm-web and we're decorating our Band class with it. Internally, fireorm-web will treat each instance of Band as a Firestore Document.
+
+Wait, Firestore Collections must have a name. What will be the name of that collection? By default, fireorm-web will name the collections with the plural form of the Model name in lower case, in this case `bands`. If you want you use your own name, you can pass a string as the first parameter of the Decorator.
+
+```typescript
+@Collection('RockBands')
+```
+
 ## Development
 
 1.  Clone the project from github:
