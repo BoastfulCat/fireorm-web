@@ -235,7 +235,7 @@ This approach will be convenient when used in a single page application.
 
 ### Complex Queries
 
-Only being able to find documents by id is a bit limiting, that's why fireorm-web repositories provide a lot of helper functions to ease the filtering of data in queries. These are `whereEqualTo`, `whereGreaterThan`, `whereGreaterOrEqualTha`, `whereLessThan`, `whereLessOrEqualThan`, `whereArrayContains`, `whereIn, and `whereArrayContainsAny` methods. We can pipe as many methods as we need to perform complex queries, as long as we don’t forget to call the `find` method at the end.
+Only being able to find documents by id is a bit limiting, that's why fireorm-web repositories provide a lot of helper functions to ease the filtering of data in queries. These are `whereEqualTo`, `whereGreaterThan`, `whereGreaterOrEqualTha`, `whereLessThan`, `whereLessOrEqualThan`, `whereArrayContains`, `whereIn` and `whereArrayContainsAny` methods. We can pipe as many methods as we need to perform complex queries, as long as we don’t forget to call the `find` method at the end.
 
 ```ts
 // Bands formed from 1990 onwards
