@@ -299,10 +299,21 @@ unsubscribe();
 Sometimes it is convenient to automatically process the received data. You can use the `pipe` method for this, passing any number of callbacks to it as arguments. This way you can transfer the filter, map and other data processing to the client side.
 
 ```ts
+function filterBandsByYear(from: number, to: number) {
+  return (items) => items.filter((item) => item.formationYear > from && item.formationYear < to);
+}
+
+function mapNameToLowerCase() {
+  return (items) => items.map((item) => {
+    item.name = item.name.toLowerCase();
+    return item;
+  });
+}
+
 await bandRepository
   .pipe(
-    (bands) => bands.filter((band) => band.formationYear > 1985 && band.formationYear < 1990),
-    (bands) => bands.map((band) => band.name.toLowerCase()),
+    filterBandsByYear(1985, 1990),
+    mapNameToLowerCase(),
   )
   .find();
 ```
