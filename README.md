@@ -67,7 +67,7 @@ initialize(firebaseFirestore);
 
 1. Create your Firestore models
 
-```typescript
+```ts
 import { Collection } from 'fireorm-web';
 
 @Collection()
@@ -102,15 +102,15 @@ await todoRepository.update(mySuperTodoDocument);
 await todoRepository.delete(mySuperTodoDocument._id);
 ```
 
-## Firebase Complex Data Types
+### Firebase Complex Data Types
 
 Firestore has support for [complex data types](https://firebase.google.com/docs/firestore/manage-data/data-types) such as GeoPoint and Reference. Full handling of complex data types is [being handled in this issue in fireorm](https://github.com/wovalle/fireorm/issues/58). Temporarily, fireorm and fireorm-web will export [Class Transformer's @Type](https://github.com/typestack/class-transformer#working-with-nested-objects) decorator. It receives a lamda where you return the type you want to cast to.
 
-## Core Concepts
+### Core Concepts
 
 FireORM-Web is just a library to simplify the way we communicate with web firestore. It does not implement the underlying communication with the database (it resorts to official sdk's for that, such as [firebase](https://www.npmjs.com/package/firebase)).
 
-## Firestore
+### Firestore
 
 According to [it's homepage](https://cloud.google.com/firestore), Firestore is a fast, fully managed, serverless, cloud-native NoSQL document database that simplifies storing, syncing, and querying data for your mobile, web, and IoT apps at global scale.
 
@@ -118,7 +118,7 @@ In Firestore, data is stored in _Documents_ which are organized into _Collection
 
 To take full advantage of what fireorm's have to offer, is recommended that you are familiarized with [Firestore Data Model](https://firebase.google.com/docs/firestore/data-model).
 
-## FireORM-Web Models
+### FireORM-Web Models
 
 Models in fireorm-web are just a way to specify the shape that our data (or _Documents_) will have. Models are represented with [JavaScript Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)!
 
@@ -133,7 +133,7 @@ class Band {
 }
 ```
 
-Wait, I only mentioned name, formationYear and genres in my original specification, so why does the model have a string property called `_id`? Because of the way the data is stored in Firestore, **it's required that every model contain a string property called _id**. If you create a model without the _id property (or with another data type such as Number or Symbol) fireorm-web won't work correctly.
+Wait, I only mentioned name, formationYear and genres in my original specification, so why does the model have a string property called `_id`? Because of the way the data is stored in Firestore, **it's required that every model contain a string property called _id**. If you create a model without the `_id` property (or with another data type such as Number or Symbol) fireorm-web won't work correctly.
 
 ### FireORM-Web Collections
 
@@ -141,7 +141,7 @@ Great, we have a model, but how can we ‘take’ our model and ‘store’ it t
 
 To declare Collections we can just _decorate_ our model class with fireorm-web `Collection` decorator and each instance of the model would act as a Firestore Document.
 
-```typescript
+```ts
 import { Collection } from 'fireorm-web';
 
 @Collection()
@@ -157,9 +157,202 @@ See how we're importing the `Collection` decorator from fireorm-web and we're de
 
 Wait, Firestore Collections must have a name. What will be the name of that collection? By default, fireorm-web will name the collections with the plural form of the Model name in lower case, in this case `bands`. If you want you use your own name, you can pass a string as the first parameter of the Decorator.
 
-```typescript
+```ts
 @Collection('RockBands')
 ```
+
+### FireORM-Web Repositories
+
+One of my goals when developing this library was to create a way to use the Repository Pattern with Firestore as easily as possible. We have our models, we have our collections, but how are we supposed to make CRUD operations? That’s what Repositories are for.
+
+> In general, repositories are classes or components that encapsulate the logic required to access data sources. They centralize common data access functionality, providing better maintainability and decoupling the infrastructure or technology used to access databases from the domain model layer ([source](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design)).
+
+Repositories provide the necessary methods to create, retrieve, update and delete documents from our Firestore collections. To create a repository from a collection we can just call `getRepository` method.
+
+```ts
+import { Collection, getRepository } from 'fireorm-web';
+
+@Collection()
+class Band {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: string[];
+}
+
+const bandRepository = getRepository(Band);
+```
+
+The variable `bandRepository` contains all the methods to interact with our `band`. You can retrieve, create, update, delete and do complex queries over our Bands collection!
+
+## Reading Data
+
+This is where fun starts! Once we have initialized fireorm-web in our application we can start using it.
+
+We'll continue working with the Band's collection we defined in Core Concept's section.
+
+### Simple Queries
+
+FireORM-Web Repositories have the method `findById` which you can use to retrieve documents by its id.
+
+Let's imagine we have a Document in our Bands Collection in firestore with an id `red-hot-chilli-peppers`. To retrieve it we only have to use the handy findById method in our repository.
+
+```ts
+import { Collection, getRepository } from 'fireorm-web';
+
+@Collection()
+class Band {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: string[];
+}
+
+const bandRepository = getRepository(Band);
+
+const band = await bandRepository.findById('red-hot-chilli-peppers');
+```
+
+Now the variable band is an instance of our Band model that contains the information about the band.
+
+### Simple Queries with Realtime Updates
+
+If you need to listen for updates document in realtime, you can use the "findByIdAndListen" method of the repository. In the arguments, you can specify callback functions that will be called when a data change detect or error.
+
+```ts
+function renderBandIten(band) {
+  // ... some render logic
+}
+
+// find document and start listen
+const unsubscribe = getRepository(Band).findByIdAndListen('red-hot-chilli-peppers', renderBandIten, console.error);
+
+// stop listen
+unsubscribe();
+```
+
+This approach will be convenient when used in a single page application.
+
+### Complex Queries
+
+Only being able to find documents by id is a bit limiting, that's why fireorm-web repositories provide a lot of helper functions to ease the filtering of data in queries. These are `whereEqualTo`, `whereGreaterThan`, `whereGreaterOrEqualTha`, `whereLessThan`, `whereLessOrEqualThan`, `whereArrayContains`, `whereIn, and `whereArrayContainsAny` methods. We can pipe as many methods as we need to perform complex queries, as long as we don’t forget to call the `find` method at the end.
+
+```ts
+// Bands formed from 1990 onwards
+await bandRepository.whereGreaterOrEqualThan('formationYear', 1990).find();
+
+// Bands whose name is Porcupine Tree
+await bandRepository.whereEqualTo('name', 'Porcupine Tree').find();
+
+// Bands formed after 1985 and that play Progressive Rock
+await bandRepository
+  .whereGreaterThan('formationYear', 1985)
+  .whereArrayContains('genres', 'progressive-rock')
+  .find();
+```
+
+All the \*Where methods have a similar api, where the first parameter is a string that represents the field that we want to search for and the second one is the value that we want to compare to (which can be any [JavaScript primitive type](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Primitive_values)). FireORM-Web also provide an alternative API to make it more type safe; the first parameter can also accept a lamda function where it's first parameter is the type of the model of the repository.
+
+```ts
+// This example is exactly the same than the last one, but using the alternative API.
+
+// Bands formed from 1990 onwards
+await bandRepository.whereGreaterOrEqualThan((band) => band.formationYear, 1990).find();
+
+// Bands whose name is Porcupine Tree
+await bandRepository.whereEqualTo((band) => band.name, 'Porcupine Tree').find();
+
+// Bands formed after 1985 and that play Progressive Rock
+await bandRepository
+  .whereGreaterThan((band) => band.formationYear, 1985)
+  .whereArrayContains((band) => band.genres, 'progressive-rock')
+  .find();
+```
+
+### Search by Document Reference
+
+We can use the document reference as the value in any of the helpers function described above.
+
+```ts
+// Fake DocumentReference
+class FirestoreDocumentReference {
+  _id: string;
+  path: string;
+}
+
+@Collection()
+class BandWithReference {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: string[];
+
+  @Type(() => FirestoreDocumentReference)
+  relatedBand?: FirestoreDocumentReference;
+}
+
+const pt = new Band();
+
+pt.id = 'porcupine-tree';
+pt.name = 'Porcupine Tree';
+pt.formationYear = 1987;
+pt.genres = ['psychedelic-rock', 'progressive-rock', 'progressive-metal'];
+
+await bandRepository.create(pt);
+
+// Filter documents by a doc reference
+const band = await bandRepository.whereEqualTo((item) => item.relatedBand, ptRef).find();
+
+// Can also use the string api of the complex query
+const band = await bandRepository.whereEqualTo('relatedBand', ptRef).find();
+```
+
+### Order By and Limit
+
+FireORM-Web repositories also provide functions to order documents and limit the quantity of documents that we will retrieve. These are `orderByAscending`, `orderByDescending`, `limit` and `offset`. Please be aware that you can only use one orderBy, one offset and one limit per query.
+
+```ts
+// Bands formed from 1990 onwards or
+await bandRepository
+  .whereGreaterOrEqualThan((band) => band.formationYear, 1990)
+  .orderByAscending('name')
+  .find();
+
+// Top 10 bands whose formationYear is 1987 in ascending order by formationYear (using the alternative api)
+await bandRepository
+  .whereEqualTo((band) => band.formationYear, 1987)
+  .orderByAscending((band) => band.formationYear)
+  .limit(10)
+  .find();
+
+// Top 3 bands formed after 1985 and that play Progressive Rock, skip first
+await bandRepository
+  .whereGreaterThan((band) => band.formationYear, 1985)
+  .whereArrayContains((band) => band.genres, 'progressive-rock')
+  .offset(1)
+  .limit(3)
+  .find();
+```
+
+### Complex Queries with Realtime Update
+
+Similar to `findByIdAndListen`, you can get data and listen for changes in real time. To do this, use the `findAndListen` method.
+
+```ts
+function renderBandList(bands) {
+  // ... some render logic
+}
+
+// run querie and start listin
+const unsubscribe = bandRepository.findAndListen(renderBandList, console.error);
+
+// stop listen
+unsubscribe();
+```
+
+### Limitations on Complex queries
+
+Please be aware that fireorm cannot circumvent [Firestore query limitations](https://firebase.google.com/docs/firestore/query-data/queries#query_limitations), we still have to create indexes if we want to create queries that involve more than one field.
 
 ## Development
 
