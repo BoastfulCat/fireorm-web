@@ -445,6 +445,81 @@ const rush = await bandRepository.findById('rush');
 await bandRepository.delete(rush);
 ```
 
+## SubCollections
+
+In the core concepts we learned that in Firestore we store data in _[Documents](https://firebase.google.com/docs/firestore/data-model#documents)_ and they are organized into [Collections](https://firebase.google.com/docs/firestore/data-model#collections). But in Firestore you can also add collections inside documents, they are called [Subcollections](https://firebase.google.com/docs/firestore/data-model#subcollections).
+
+To represent a SubCollection in our code, we'll make use of fireorm-web `SubCollection` decorator.
+For example, let’s create an Albums model and add it as a Subcollection of Band
+
+```ts
+import { Collection, SubCollection, Repository } from 'fireorm-web';
+
+class Album {
+  _id: string;
+  name: string;
+  year: number;
+}
+
+@Collection()
+class Band {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: string[];
+
+  @SubCollection(Album)
+  albums?: Repository<Album>;
+}
+```
+
+In this case we created a model called Album to store each album information: a unique id (remember, models must have an id by design!), name and year. Once the model is created, we add a _albums_ property to the existing Band model and decorate it using fireorm-web `SubCollection` decorator passing Album model as the first parameter.
+
+Notice how we didn't add the `Collection` Decorator to the Album class (we wanted it to be a SubCollection, not a Collection!) but added the `SubCollection` inside Band model.
+
+By default, fireorm-web will name the SubCollections with the plural form of the model name that was passed as first parameter (in this case, it will be named `Albums`). If you want you use your own name, you can pass an string as the second parameter of the SubCollection Decorator.
+
+```ts
+@SubCollection(Album, 'TheAlbums')
+```
+
+### Nested SubCollections
+
+FireORM-Web has support for nested subcollections (subcollections inside subcollections). To represent a nested subcollection we only have to use the `SubCollection` decorator inside a model that is itself a subcollection of another model.
+
+```ts
+import { Collection, SubCollection, Repository } from 'fireorm-web';
+
+class Image {
+  _id: string;
+  url: string;
+}
+
+class Album {
+  _id: string;
+  name: string;
+  year: number;
+
+  @SubCollection(Image)
+  images?: Repository<Image>;
+}
+
+@Collection()
+class Band {
+  _id: string;
+  name: string;
+  formationYear: number;
+  genres: Array<string>;
+
+  @SubCollection(Album)
+  albums?: Repository<Album>;
+}
+```
+
+In this example we have a **Band** model that has a field called `albums` that represents the **Albums** subcollection that itself has a field called `images` that represents the **Images** subcollection (Band -> Album -> Image).
+
+Please note that firestore supports [up to 100](https://firebase.google.com/docs/firestore/data-model#subcollections) nested subcollections.
+
 ## Development
 
 1.  Clone the project from github:
