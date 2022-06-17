@@ -79,14 +79,24 @@ export abstract class AbstractFirestoreRepository<T extends Entity> extends Dumm
 
       if (isTimestamp(val)) {
         obj[key] = val.toDate();
-      } else if (isGeoPoint(val)) {
+        return obj;
+      }
+
+      if (isGeoPoint(val)) {
         const {latitude, longitude} = val;
         obj[key] = {latitude, longitude};
-      } else if (isDocumentReference(val)) {
+        return obj;
+      }
+
+      if (isDocumentReference(val)) {
         const {id, path} = val;
-        obj[key] = {_id: id, path};
-      } else if (isObject(val)) {
+        obj[key] = {_id: id, _path: path};
+        return obj;
+      }
+
+      if (isObject(val)) {
         this.transformFirestoreTypes(val);
+        return obj;
       }
     });
 

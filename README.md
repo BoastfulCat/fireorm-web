@@ -372,7 +372,7 @@ We can use the document reference as the value in any of the helpers function de
 // Fake DocumentReference
 class FirestoreDocumentReference {
   public _id: string;
-  public path: string;
+  public _path: string;
 }
 
 @Collection()
