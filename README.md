@@ -428,6 +428,7 @@ await bandRepository
   .limit(3)
   .find();
 ```
+Be careful offset - [not recommended to google](https://cloud.google.com/firestore/docs/best-practices#read_and_write_operations)
 
 ### Limitations on Complex queries
 
