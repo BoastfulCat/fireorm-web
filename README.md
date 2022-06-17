@@ -6,6 +6,52 @@
 
 FireORM for Web - is a tiny wrapper on top of web firebase package, based on [fireorm](https://github.com/wovalle/fireorm) codebase that makes life easier when dealing with a Firestore database. FireORM-Web tries to ease the development of apps that rely on Firestore at the database layer by abstracting the access layer providing a familiar repository pattern. It basically helps us not worry about Firestore details and focus on what matters: adding cool new features!
 
+## Contents
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Firebase Complex Data Types](#firebase-complex-data-types)
+  - [Core Concepts](#core-concepts)
+  - [Firestore](#firestore)
+  - [Models](#fireorm-web-models)
+  - [Collections](#fireorm-web-collections)
+  - [Repositories](#fireorm-web-repositories)
+- [Reading Data](#reading-data)
+  - [Simple Queries](#simple-queries)
+  - [Simple Queries with Realtime Updates](#simple-queries-with-realtime-updates)
+  - [Complex Queries](#complex-queries)
+  - [Complex Queries with Realtime Update](#complex-queries-with-realtime-update)
+  - [Pipe for Post Processing](#pipe-for-post-processing)
+  - [Search by Document Reference](#search-by-document-reference)
+  - [Order By and Limit](#order-by-and-limit)
+  - [Limitations on Complex queries](#limitations-on-complex-queries)
+- [Manage Data](#manage-data)
+  - [Create Documents](#create-documents)
+  - [Update Documents](#update-documents)
+  - [Delete Documents](#delete-documents)
+- [SubCollections](#subcollections)
+  - [Nested SubCollections](#nested-subcollections)
+- [Transactions](#transactions)
+  - [Transactions inside repositories](#transactions-inside-repositories)
+  - [Transactions in multiple repositories](#transactions-in-multiple-repositories)
+  - [Returning values from transactions](#returning-values-from-transactions)
+  - [Transaction in subcollections](#transaction-in-subcollections)
+  - [Limitations](#limitations)
+- [Batches](#batches)
+  - [Batches inside repositories](#batches-inside-repositories)
+  - [Batches in multiple repositories](#batches-in-multiple-repositories)
+  - [Batches in subcollections](#batches-in-subcollections)
+  - [Limitations](#limitations-1)
+- [Custom Repositories](#custom-repositories)
+  - [Casting](#casting)
+- [Validation](#validation)
+- [Transformer](#transformer)
+- [Utils](#utils)
+- [Development](#development)
+  - [Committing](#committing)
+  - [Release a new version](#release-a-new-version)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Installation
 
 1. Install the npm package:
@@ -72,9 +118,9 @@ import { Collection } from 'fireorm-web';
 
 @Collection()
 class Todo {
-  _id: string;
-  text: string;
-  done: Boolean;
+  public _id: string;
+  public text: string;
+  public done: Boolean;
 }
 ```
 
@@ -126,10 +172,10 @@ For example, let's pretend that we want to store information about Rock Bands:th
 
 ```ts
 class Band {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: string[];
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: string[];
 }
 ```
 
@@ -146,10 +192,10 @@ import { Collection } from 'fireorm-web';
 
 @Collection()
 class Band {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: string[];
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: string[];
 }
 ```
 
@@ -174,10 +220,10 @@ import { Collection, getRepository } from 'fireorm-web';
 
 @Collection()
 class Band {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: string[];
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: string[];
 }
 
 const bandRepository = getRepository(Band);
@@ -202,10 +248,10 @@ import { Collection, getRepository } from 'fireorm-web';
 
 @Collection()
 class Band {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: string[];
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: string[];
 }
 
 const bandRepository = getRepository(Band);
@@ -325,19 +371,19 @@ We can use the document reference as the value in any of the helpers function de
 ```ts
 // Fake DocumentReference
 class FirestoreDocumentReference {
-  _id: string;
-  path: string;
+  public _id: string;
+  public path: string;
 }
 
 @Collection()
 class BandWithReference {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: string[];
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: string[];
 
   @Type(() => FirestoreDocumentReference)
-  relatedBand?: FirestoreDocumentReference;
+  public relatedBand?: FirestoreDocumentReference;
 }
 
 const pt = new Band();
@@ -350,10 +396,10 @@ pt.genres = ['psychedelic-rock', 'progressive-rock', 'progressive-metal'];
 await bandRepository.create(pt);
 
 // Filter documents by a doc reference
-const band = await bandRepository.whereEqualTo((item) => item.relatedBand, ptRef).find();
+const band1 = await bandRepository.whereEqualTo((item) => item.relatedBand, ptRef).find();
 
 // Can also use the string api of the complex query
-const band = await bandRepository.whereEqualTo('relatedBand', ptRef).find();
+await band2 = bandRepository.whereEqualTo('relatedBand', ptRef).find();
 ```
 
 ### Order By and Limit
@@ -456,20 +502,20 @@ For example, let’s create an Albums model and add it as a Subcollection of Ban
 import { Collection, SubCollection, Repository } from 'fireorm-web';
 
 class Album {
-  _id: string;
-  name: string;
-  year: number;
+  public _id: string;
+  public name: string;
+  public year: number;
 }
 
 @Collection()
 class Band {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: string[];
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: string[];
 
   @SubCollection(Album)
-  albums?: Repository<Album>;
+  public albums?: Repository<Album>;
 }
 ```
 
@@ -491,34 +537,430 @@ FireORM-Web has support for nested subcollections (subcollections inside subcoll
 import { Collection, SubCollection, Repository } from 'fireorm-web';
 
 class Image {
-  _id: string;
-  url: string;
+  public _id: string;
+  public url: string;
 }
 
 class Album {
-  _id: string;
-  name: string;
-  year: number;
+  public _id: string;
+  public name: string;
+  public year: number;
 
   @SubCollection(Image)
-  images?: Repository<Image>;
+  public images?: Repository<Image>;
 }
 
 @Collection()
 class Band {
-  _id: string;
-  name: string;
-  formationYear: number;
-  genres: Array<string>;
+  public _id: string;
+  public name: string;
+  public formationYear: number;
+  public genres: Array<string>;
 
   @SubCollection(Album)
-  albums?: Repository<Album>;
+  public albums?: Repository<Album>;
 }
 ```
 
 In this example we have a **Band** model that has a field called `albums` that represents the **Albums** subcollection that itself has a field called `images` that represents the **Images** subcollection (Band -> Album -> Image).
 
 Please note that firestore supports [up to 100](https://firebase.google.com/docs/firestore/data-model#subcollections) nested subcollections.
+
+## Transactions
+
+FireORM-Web also has support for [Firestore Transactions](https://firebase.google.com/docs/firestore/manage-data/transactions) inside a single repository and between multiple repositories.
+
+### Transactions inside repositories
+
+FireORM-Web repositories have a `runTransaction` method. It receives a lamda function where the first parameter corresponds to a `FirestoreTransactionRepository`. The `FirestoreTransactionRepository` is an special type of repository that has methods to create, retrieve, update and delete documents inside a transaction.
+
+```ts
+import { getRepository, Collection } from 'fireorm-web';
+import Band from './wherever-our-models-are';
+
+const bandRepository = getRepository(Band);
+const dt = new Band();
+
+dt._id = 'dream-theater';
+dt.name = 'DreamTheater';
+dt.formationYear = 1985;
+
+bandRepository.runTransaction(async (tran) => {
+  await tran.create(dt);
+});
+```
+
+### Transactions in multiple repositories
+
+FireORM-Web exports a `runTransaction` method that can be used to create transactions with one or multiple repositories. It receives a lamda function where the first parameter corresponds to a `FirestoreTransactionRepository` class. This class exposes a `getRepository` method that receives an Model class and returns a `FirestoreTransactionRepository` of the given entity and can be used to create, retrieve, update and delete documents inside a transaction.
+
+```ts
+import { runTransaction } from 'fireorm-web';
+import { Band, Album } from './wherever-our-models-are';
+
+const band = new Band();
+
+band._id = 'dream-theater';
+band.name = 'DreamTheater';
+band.formationYear = 1985;
+
+const album1 = new Album();
+
+album1.name = 'When Dream and Day Unite';
+album1.releaseDate = new Date('1989-03-06T00:00:00.000Z');
+album1.bandId = band._id;
+
+const album2 = new Album();
+
+album2.name = 'Images and Words';
+album2.releaseDate = new Date('1992-07-07T00:00:00.000Z');
+album2.bandId = band._id;
+
+await runTransaction(async (tran) => {
+  const bandTranRepository = tran.getRepository(Band);
+  const albumTranRepository = tran.getRepository(Album);
+
+  await bandTranRepository.create(band);
+  await albumTranRepository.create(album1);
+  await albumTranRepository.create(album2);
+});
+```
+
+### Returning values from transactions
+
+If you need to return data from transactions, `runTransaction` receives a [type parameter](https://www.typescriptlang.org/docs/handbook/generics.html#using-type-parameters-in-generic-constraints) of the output value of your transaction.
+
+```ts
+import { runTransaction } from 'fireorm-web';
+import { Band } from './wherever-our-models-are';
+
+const band = new Band();
+
+band.id = 'dream-theater';
+band.name = 'DreamTheater';
+band.formationYear = 1985;
+
+await runTransaction<Band>(async (tran) => {
+  const bandTranRepository = tran.getRepository(Band);
+  const albumTranRepository = tran.getRepository(Album);
+
+  return bandTranRepository.create(band);
+});
+```
+
+### Transaction in subcollections
+
+If we create an entity inside a transactions, all of its subcollections will be automatically be a `FirestoreTransactionRepository` that means that all of the operations done to subcollections will also be done inside transactions. Once the transaction is finished fireorm will automatically change the `FirestoreTransactionRepository` for a normal `FirestoreRepository` in case you need to reuse the entity.
+
+```ts
+import { runTransaction } from 'fireorm-web';
+import { Band, Album } from './wherever-our-models-are';
+
+const band = new Band();
+
+band._id = 'tame-impala';
+band.name = 'Tame Impala';
+band.formationYear = 2007;
+
+const albums = [
+  {
+    _id: 'currents',
+    name: 'Currents',
+    releaseDate: new Date('2015-07-17T00:00:00.000Z'),
+  },
+  {
+    _id: 'slow-rush',
+    name: 'The Slow Rush',
+    releaseDate: new Date('2020-02-14T00:00:00.000Z'),
+  },
+];
+
+await runTransaction<Band>(async (tran) => {
+  const bandTranRepository = tran.getRepository(Band);
+
+  // Create the band inside transaction.
+  // Band contains a subcollection of Albums in the field albums, so when the band is created it will contain an albums field with FirestoreTransactionRepository<Album> type.
+  const createdBand = await bandTranRepository.create(band);
+
+  // Once the band is created, save the albums
+  for (const album of albums) {
+    await createdBand.albums.create(album);
+  }
+
+  // Outside of the transaction, albums will be a FirestoreRepository<Album>
+  return createdBand;
+});
+```
+
+### Limitations
+
+Please be aware that Firestore has many limitations when working with transactions. You can learn more [here](https://firebase.google.com/docs/firestore/manage-data/transactions). The most notable ones are that inside Transactions all the read operations must be done first (i.e. if you need to fetch some documents from firestore and edit it inside a transaction, you must fetch everything you need before doing creating/updating/deleting any document). Also, transactions cannot contain any `limit`, `offset` or `orderBy` clauses.
+
+## Batches
+
+FireORM-Web also has support for Firestore's [Batched Writes](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes).
+
+### Batches inside repositories
+
+FireORM-Web repositories have a `createBatch` method that returns a `FirestoreBatchRepository`. The `FirestoreBatchRepository` is an special type of repository that has methods to create, update and delete documents inside a batch. After adding all the operations that we want to run to the batch, we have to call the `commit` method to execute them.
+
+```ts
+import { getRepository, Collection } from 'fireorm-web';
+import Band from './wherever-our-models-are';
+
+const bandRepository = getRepository(Band);
+const dt = new Band();
+
+dt._id = 'dream-theater';
+dt.name = 'DreamTheater';
+dt.formationYear = 1985;
+
+const batch = bandRepository.createBatch();
+
+batch.create(dt);
+
+await batch.commit();
+```
+
+### Batches in multiple repositories
+
+FireORM-Web exports a `createBatch` method that can be used to create batches with one or multiple repositories. It receives a lamda function where the first parameter corresponds to a `FirestoreBatchStorage` class. This class exposes a `getRepository` method that receives an Model class and returns a `FirestoreBatchRepository` of the given entity and can be used to create, update and delete documents. Once all operations are defined, we have to call the `commit` method of our `FirestoreBatchRepository` to commit all the operations.
+
+```ts
+import { createBatch } from 'fireorm-web';
+import { Band, Album } from './wherever-our-models-are';
+
+const band = new Band();
+
+band._id = 'dream-theater';
+band.name = 'DreamTheater';
+band.formationYear = 1985;
+
+const album1 = new Album();
+
+album1.name = 'When Dream and Day Unite';
+album1.releaseDate = new Date('1989-03-06T00:00:00.000Z');
+album1.bandId = band._id;
+
+const album2 = new Album();
+
+album2.name = 'Images and Words';
+album2.releaseDate = new Date('1992-07-07T00:00:00.000Z');
+album2.bandId = band._id;
+
+const batch = createBatch();
+
+const bandBatchRepository = batch.getRepository(Band);
+const albumBatchRepository = batch.getRepository(Album);
+
+bandBatchRepository.create(band);
+albumBatchRepository.create(album1);
+albumBatchRepository.create(album2);
+
+await batch.commit();
+```
+
+### Batches in subcollections
+
+FireORM-Web exports a `createBatch` method that can be used to create batches with one or multiple repositories. It receives a lamda function where the first parameter corresponds to a `FirestoreBatchStorage` class. This class exposes a `getRepository` method that receives an Model class and returns a `FirestoreBatchRepository` of the given entity and can be used to create, update and delete documents. Once all operations are defined, we have to call the `commit` method of our `FirestoreBatchRepository` to commit all the operations.
+
+```ts
+import Band from './wherever-our-models-are';
+import Album from './wherever-our-models-are';
+
+const bandRepository = getRepository(Band);
+const band = bandRepository.findById('opeth');
+
+// Initialize subcollection documents
+const firstAlbum = new Album();
+
+firstAlbum._id = 'blackwater-park';
+firstAlbum.name = 'Blackwater Park';
+firstAlbum.releaseDate = new Date('2001-12-03T00:00:00.000Z');
+
+const secondAlbum = new Album();
+
+secondAlbum._id = 'deliverance';
+secondAlbum.name = 'Deliverance';
+secondAlbum.releaseDate = new Date('2002-11-12T00:00:00.000Z');
+
+// Create a batch for the subcollection
+const albumsBatch = band.albums.createBatch();
+
+// Add the subcollection entities
+albumsBatch.create(firstAlbum);
+albumsBatch.create(secondAlbum);
+
+// Commit transaction
+await albumsBatch.commit();
+```
+
+### Limitations
+
+Please be aware that Firestore has many limitations when working with BatchedWrites. You can learn more [here](https://firebase.google.com/docs/firestore/manage-data/transactions).
+
+## Custom Repositories
+
+By default, fireorm-web repositories have methods to create, read, update and delete documents, but what if we want to add extra data access logic? FireORM-Web supports Custom Repositories. A Custom Repository is a class that extends FirestoreRepository<T>(where T is a model) and is decorated with fireorm-web `CustomRepository` decorator.
+
+```ts
+import { FirestoreRepository, CustomRepository, getRepository } from 'fireorm-web';
+import Band from './wherever-our-models-are';
+
+@CustomRepository(Band)
+class CustomBandRepository extends FirestoreRepository<Band> {
+  async getProgressiveRockBands(): Promise<Band[]> {
+    return this.whereArrayContains('genres', 'progressive-rock').find();
+  }
+}
+
+const bandRepository = getRepository(Band) as CustomBandRepository;
+const bands = await bandRepository.getProgressiveRockBands();
+```
+
+Now, `getRepository(Band)` will return the custom repository for Band with the _getProgressiveRockBands_ method. If a model doesn’t have a custom repository, the base repository will be returned. FireORM-Web also provides `getCustomRepository` and `getBaseRepository` helpers if we don’t want the default behavior.
+
+### Casting
+
+As you could see in the previous example, we had to cast the repository returned by the `getRepository` as the custom repository we wanted to use (_CustomBandRepository_).
+
+## Validation
+
+FireORM-Web supports [class-validator](https://github.com/typestack/class-validator) validation decorators in any collection.
+
+FireORM-Web depend on it explicitly. Enable model validation and config it, you may in `initialize` method call.
+
+```ts
+initialize(
+    firebaseFirestore,
+    {
+      validateModels: true,
+      validatorOptions: {
+        skipNullProperties: true,
+      },
+    },
+  );
+```
+
+and add validator 
+
+```ts
+import { Collection } from 'fireorm-web';
+import { IsEmail } from 'class-validator';
+
+@Collection()
+class Band {
+  @IsEmail()
+  public contactEmail: string;
+}
+```
+
+Use this in the same way that you would your other collections and it will validate whenever a document is saved or updated.
+
+## Transformer
+
+FireORM-Web supports [class-transformer](https://github.com/typestack/class-transformer) transform decorators in any collection.
+
+FireORM-Web depend on it explicitly. Transformer is always applied and cannot be disabled. Config it, you may in `initialize` method call.
+
+```ts
+initialize(
+  firebaseFirestore,
+  {
+    transformOptions: {
+      exposeDefaultValues: false,
+    },
+  },
+);
+```
+add class-transformer decorator
+```ts
+import { Collection } from 'fireorm-web';
+import { Exclude, Transform, Type } from 'class-transformer';
+
+@Collection()
+class User {
+  @Exclude({toClassOnly: true})
+  public password: string;
+}
+```
+
+Class transformer will be applied when you read or write data. Getters from the model do not get into the handler
+
+## Utils
+
+You can ask the fireorm-web to ignore the field when reading or writing data. Simply applying a decorator to it.
+
+```ts
+import { Collection, Ignore } from 'fireorm-web';
+
+@Collection()
+class Band {
+  public _id: string;
+
+  @Ignore()
+  public name: string;
+}
+```
+
+Or allows for serialization of properties.
+
+```ts
+import { Collection, Serialize } from 'fireorm-web';
+
+class Website {
+  public url: string;
+}
+
+@Collection()
+class Band {
+  public _id: string;
+
+  @Serialize(Website)
+  public website: Website;
+}
+```
+
+Often you need to be able to quickly search for a record across various text fields or filter by an exact value. To do this, the fireorm-web has `Search` and `Filter` decorators, as well as special methods `searchInData` and `filterDataByParams` for processing the collection after it is loaded on the client. Each of the decorators supports a custom handler function.
+
+```ts
+import { Collection, Search, Filter, searchInData, filterDataByParams, getRepository } from 'fireorm-web';
+
+@Collection()
+class User {
+  public _id: string;
+
+  @Search()
+  public name: string;
+
+  @Search()
+  public address: string;
+
+  @Search()
+  public phone: string;
+
+  @Search((search: string | undefined, data: T): boolean => data.indexOf(`+${search}`) !== 1)
+  public phones: string[];
+  
+  @Filter()
+  public active: boolean;
+}
+
+const users1 = await getRepository(User)
+        .find()
+        .filter((item) => searchInData('some_text', item))
+        .filter((item) => filterDataByParams({field: 'active', value: true}, item));
+
+// or use in pipe
+const users2 = await getRepository(User)
+        .pipe(
+          (items) => items.filter((item) => searchInData('some_text', item)),
+          (items) => items.filter((item) => filterDataByParams({field: 'active', value: true}, item)),
+        )
+        .find();
+```
+
+`Search` and `Filter` also supports SubCollections and nested data.
 
 ## Development
 
