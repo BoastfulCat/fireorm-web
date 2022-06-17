@@ -162,7 +162,7 @@ According to [it's homepage](https://cloud.google.com/firestore), Firestore is a
 
 In Firestore, data is stored in _Documents_ which are organized into _Collections_ that may also contain _SubCollections_.
 
-To take full advantage of what fireorm's have to offer, is recommended that you are familiarized with [Firestore Data Model](https://firebase.google.com/docs/firestore/data-model).
+To take full advantage of what fireorm-web have to offer, is recommended that you are familiarized with [Firestore Data Model](https://firebase.google.com/docs/firestore/data-model).
 
 ### FireORM-Web Models
 
@@ -650,7 +650,7 @@ await runTransaction<Band>(async (tran) => {
 
 ### Transaction in subcollections
 
-If we create an entity inside a transactions, all of its subcollections will be automatically be a `FirestoreTransactionRepository` that means that all of the operations done to subcollections will also be done inside transactions. Once the transaction is finished fireorm will automatically change the `FirestoreTransactionRepository` for a normal `FirestoreRepository` in case you need to reuse the entity.
+If we create an entity inside a transactions, all of its subcollections will be automatically be a `FirestoreTransactionRepository` that means that all of the operations done to subcollections will also be done inside transactions. Once the transaction is finished fireorm-web will automatically change the `FirestoreTransactionRepository` for a normal `FirestoreRepository` in case you need to reuse the entity.
 
 ```ts
 import { runTransaction } from 'fireorm-web';

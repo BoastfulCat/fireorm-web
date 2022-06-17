@@ -1,6 +1,6 @@
 {
   "name": "fireorm-web",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "ORM for Web Firestore",
   "author": "BoastfulCat",
   "license": "ISC",
