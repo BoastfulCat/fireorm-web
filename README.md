@@ -936,11 +936,8 @@ class User {
   @Search()
   public address: string;
 
-  @Search()
+  @Search((search: string | undefined, data: string): boolean => data.indexOf(`+${search}`) !== 1)
   public phone: string;
-
-  @Search((search: string | undefined, data: T): boolean => data.indexOf(`+${search}`) !== 1)
-  public phones: string[];
   
   @Filter()
   public active: boolean;
