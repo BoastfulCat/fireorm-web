@@ -4,4 +4,4 @@ export * from './FirestoreBatchSingleRepository';
 export * from './FirestoreRepository';
 export * from './FirestoreTransactionRepository';
 export * from './DummyRepository';
-export * from './CustomRepository';
+export * from './FirebaseCustomRepository';
